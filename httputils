@@ -1,0 +1,271 @@
+/**
+ * 
+ * @author jnetzhou
+ * @description http工具类
+ */
+public class HttpUtil{
+	
+	private static HttpUtil instance;
+    private OkHttpClient okHttpClient;
+    private Handler handler;
+
+    @SuppressLint("NewApi")
+	private HttpUtil() {
+
+    	okHttpClient = new OkHttpClient();
+    	okHttpClient.setConnectTimeout(30, TimeUnit.SECONDS);
+    	okHttpClient.setWriteTimeout(30, TimeUnit.SECONDS);
+    	okHttpClient.setReadTimeout(30, TimeUnit.SECONDS);
+    	okHttpClient.setCookieHandler(new CookieManager(null, CookiePolicy.ACCEPT_ORIGINAL_SERVER));
+    	handler = new Handler(Looper.getMainLooper());
+    }
+
+    /**
+     * 通过单例模式构造对象
+     * @return AnyChatHttpUtil
+     */
+    private static HttpUtil getInstance() {
+        if (instance == null) {
+        	synchronized (HttpUtil.class) {
+        		if(instance == null) {
+                	instance = new HttpUtil();
+                }
+			}
+        	
+        }
+        return instance;
+    }
+
+    /**
+     * 构造Get请求
+     * @param url  请求的url
+     * @param callback  结果回调的方法
+     */
+    @SuppressWarnings("rawtypes")
+	private void getRequest(String url, final ResultCallback callback) {
+        final Request request = new Request.Builder().url(url).build();
+        call(callback, request);
+    }
+
+    /**
+     * 构造Get请求
+     * @param headers 请求头
+     * @param url  请求的url
+     * @param callback  结果回调的方法
+     */
+    @SuppressWarnings("rawtypes")
+	private void getRequest(String url, List<ParamPair> headers,final ResultCallback callback) {
+    	com.squareup.okhttp.Request.Builder builder = new Request.Builder().url(url);
+    	if(headers != null && headers.size() > 0) {
+    		for(ParamPair header : headers) {
+    			builder.addHeader(header.key, header.value);
+    		}
+    	}
+    	final Request request = builder.build();
+    	call(callback,request);
+    }
+    
+    /**
+     * 构造post 请求
+     * @param url 请求的url
+     * @param callback 结果回调的方法
+     * @param params 请求参数
+     */
+    @SuppressWarnings("rawtypes")
+	private void postRequest(String url, final ResultCallback callback, List<ParamPair> params) {
+        Request request = buildPostRequest(url, params);
+        call(callback, request);
+    }
+
+    /**
+     * 构造post 请求
+     * @param url 请求url
+     * @param callback 结果回调
+     * @param headers 请求头
+     * @param params 请求参数
+     */
+    @SuppressWarnings("rawtypes")
+	private void postRequest(String url, final ResultCallback callback, List<ParamPair> headers, List<ParamPair> params) {
+    	Request request = buildPostRequest(url,headers,params);
+    	call(callback,request);
+    }
+    /**
+     * 处理请求结果的回调
+     * @param callback
+     * @param request
+     */
+    @SuppressWarnings("rawtypes")
+	private void call(final ResultCallback callback, Request request) {
+    	okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, final IOException e) {
+            	dispatchFailEvent(callback, e);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                try {
+                    String str = response.body().string();
+                    dispatchSuccessEvent(callback, str);
+                   
+                } catch (final Exception e) {
+                	dispatchFailEvent(callback, e);
+                }
+
+            }
+        });
+    }
+
+    /**
+     * 发送失败的回调
+     * @param callback
+     * @param e
+     */
+    @SuppressWarnings("rawtypes")
+	private void dispatchFailEvent(final ResultCallback callback, final Exception e) {
+    	handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (callback != null) {
+                    callback.onFailure(e);
+                }
+            }
+        });
+    }
+
+    /**
+     * 发送成功的调
+     * @param callback
+     * @param obj
+     */
+    @SuppressWarnings("rawtypes")
+	private void dispatchSuccessEvent(final ResultCallback callback, final Object obj) {
+    	handler.post(new Runnable() {
+            @SuppressWarnings("unchecked")
+			@Override
+            public void run() {
+                if (callback != null) {
+                    callback.onSuccess(obj);
+                }
+            }
+        });
+    }
+
+    /**
+     * 构造post请求
+     * @param url  请求url
+     * @param params 请求的参数
+     * @return 返回 Request
+     */
+    private Request buildPostRequest(String url, List<ParamPair> params) {
+        FormEncodingBuilder builder = new FormEncodingBuilder();
+        if(params != null && params.size() > 0) {
+	        for (ParamPair param : params) {
+	            builder.add(param.key, param.value);
+	        }
+        }
+        RequestBody requestBody = builder.build();
+        return new Request.Builder().url(url).post(requestBody).build();
+    }
+
+    /**
+     * 构造post请求
+     * @param url  请求url
+     * @param headers 请求头
+     * @param params 请求的参数
+     * @return 返回 Request
+     */
+    private Request buildPostRequest(String url,List<ParamPair> headers,List<ParamPair> params) {
+    	FormEncodingBuilder formBuilder = new FormEncodingBuilder();
+        if(params != null && params.size() > 0) {
+	    	for (ParamPair param : params) {
+	        	formBuilder.add(param.key, param.value);
+	        }
+        }
+        RequestBody requestBody = formBuilder.build();
+        com.squareup.okhttp.Request.Builder builder = new Request.Builder().url(url);
+        if(headers != null && headers.size() > 0) {
+        	for(ParamPair header : headers) {
+        		builder.addHeader(header.key, header.value);
+        	}
+        }
+        
+        Request request = builder.post(requestBody).build();
+        return request;
+    } 
+    
+
+    /**
+     * get请求
+     * @param url  请求url
+     * @param callback  请求回调
+     */
+    @SuppressWarnings("rawtypes")
+	public static void get(String url, ResultCallback callback) {
+    	getInstance().getRequest(url, callback);
+    }
+
+    /**
+     * get请求
+     * @param url 请求url
+     * @param headers 请求头
+     * @param callback 请求回调
+     */
+    @SuppressWarnings("rawtypes")
+	public static void get(String url,List<ParamPair> headers, ResultCallback callback) {
+    	getInstance().getRequest(url, headers, callback);
+    }
+    
+    
+    
+    /**
+     * post请求
+     * @param url       请求url
+     * @param callback  请求回调
+     * @param params    请求参数
+     */
+    @SuppressWarnings("rawtypes")
+	public static void post(String url, final ResultCallback callback, List<ParamPair> params) {
+    	getInstance().postRequest(url, callback, params);
+    }
+
+    @SuppressWarnings("rawtypes")
+	public static void post(String url, final ResultCallback callback, List<ParamPair> headers,List<ParamPair> params) {
+    	getInstance().postRequest(url, callback, headers,params);
+    }
+    
+    /**
+     * http请求回调类,回调方法在UI线程中执行
+     * @param <T>
+     */
+    public static abstract class ResultCallback<T> {
+
+        /**
+         * 请求成功回调
+         * @param response
+         */
+        public abstract void onSuccess(T response);
+
+        /**
+         * 请求失败回调
+         * @param e
+         */
+        public abstract void onFailure(Exception e);
+    }
+
+    /**
+     * post请求参数类
+     */
+    public static class ParamPair {
+
+       public String key;//请求的参数
+       public String value;//参数的值
+
+        public ParamPair(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+
+    }
+}
