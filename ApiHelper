@@ -1,0 +1,392 @@
+package com.anychat.beijingtrust.config;
+
+import java.util.ArrayList;
+
+import android.text.TextUtils;
+
+import com.anychat.beijingtrust.model.IDCardInfoModel;
+import com.anychat.beijingtrust.model.LoginModel;
+import com.anychat.beijingtrust.model.OCRModel;
+import com.anychat.beijingtrust.model.ProductModel;
+import com.anychat.beijingtrust.model.TradeIdCardModel;
+import com.anychat.beijingtrust.model.TradeModel;
+import com.anychat.beijingtrust.model.VersionModel;
+import com.anychat.roa.util.HttpUtil;
+import com.anychat.roa.util.HttpUtil.ParamPair;
+import com.anychat.roa.util.HttpUtil.ResultCallback;
+
+/**
+ * 
+ * @author jnetzhou
+ * @description api工具类
+ */
+public class ApiHelper {
+	public static int type=0;//客户类型，0-个人；1-机构
+	public static int CertificatesType; //个人证件类型  0-身份证
+	public static String tradeNo="";//流水号
+	public static String customerName="";//客户名称
+	public static int userId=-1;//用户AnyChat的ID
+	public static boolean isLogin = false;
+	public static int USER_ID=0;//用户预约ID
+	public static String phoneNum="";//用户手机号码
+	public static String username="";//用户姓名
+	public static String userIDCard="";//用户身份证号码
+	
+	public final static int QUEUE_PRL = 10;//优先级
+	public final static String ANYCHAT_SIGN = "";//签名
+/**
+ * 北京国际
+ */
+//	public final static String BASE_URL = "https://114.255.213.137";
+//	
+//	public final static String ANYCHAT_URL = "114.255.213.137";//AnyChat服务器地址
+//	public final static int ANYCHAT_PORT = 8912;
+//	public final static String ANYCHAT_APPID = "25C7E774-6D55-4E4F-9C47-E280B7E8921A";//AppID
+//	
+	
+//	public final static String BASE_URL = "http://h5.anychat.net.cn/AnyChatFaceXClient";//http正式
+
+/**
+ * 公司内部测试
+ */
+	public final static String BASE_URL = "http://h5test.anychat.net.cn:8088";//http测试
+	public final static int ANYCHAT_PORT = 8906;
+	public final static String ANYCHAT_APPID = "18889802-240A-8744-BBEA-BA6C9FAEB1B9";//AppID测试
+	public final static String ANYCHAT_URL = "120.76.248.33";//AnyChat服务器地址
+	
+//	public final static String ANYCHAT_APPID = "23AEA683-094D-564E-ACA9-76A46CAACFF2";//AppID正式
+//	public final static String ANYCHAT_URL = "121.196.245.54";//AnyChat正式服务器地址
+	
+	
+//	public final static String AREAID = 2+"";//营业厅默认id，正式
+//	public final static String QUEUEID = 2002+"";//队列默认id，正式
+//	public final static String AREAID = 200001+"";//营业厅默认id，测试
+//	public  static String QUEUEID = 0+"";//队列ID(从预约产品中获取)
+	
+//	public final static String ANYCHAT_URL = "demo.anychat.cn";//AnyChat测试服务器地址
+//	public final static String AREAID = 10002+"";//营业厅默认id
+//	public final static String QUEUEID = 201+"";//队列默认id
+
+	/**
+	 * 测试模式
+	 */
+	public final static Boolean tastModle = false;
+	
+	/**
+	 * 获取短信验证码接口地址
+	 */
+	public final static String SMS_URL = BASE_URL + "/AnyChatFaceXClient/v1/client/sendSmsForUserLogin";
+	
+	/**
+	 * 登录接口地址
+	 */
+	public final static String LOGIN_URL = BASE_URL + "/AnyChatFaceXClient/v1/client/login";
+	
+	/**
+	 * 获取营业厅队列问题
+	 */
+	public final static String GET_AREA_LIST_URL = BASE_URL + "/AnyChatFaceXClient/v1/client/question/getquestions";
+	
+	/**
+	 * 身份认证
+	 */
+	public final static String OCR_URL = BASE_URL + "/AnyChatFaceXClient/v1/client/trade/upload";
+
+	/**
+	 * 身份信息上传
+	 */
+	public final static String ADD_IDCARD_INFO_URL = BASE_URL + "/AnyChatFaceXClient/v1/client /addIDCardInfo";
+	
+	/**
+	 * 流水号创建接口
+	 */
+	public final static String CREATE_TRADE_URL = BASE_URL + "/AnyChatFaceXClient/v1/client/trade/createTrade";
+	
+	/**
+	 * 更新流水信息
+	 */
+	public final static String UNDATETRADEINFO_URL = BASE_URL+"/AnyChatFaceXClient/v1/client/trade/updateTradeInfo";
+	
+	/**
+	 * 流水添加身份证正反面接口
+	 */
+	public final static String ADD_TRADE_IDCARD_URL = BASE_URL + "/AnyChatFaceXClient/v1/client/trade/uploadBase64Image";
+	/**
+	 * 服务器图片浏览
+	 */
+	public final static String PHOTO_BROWS_URL=BASE_URL+"/AnyChatFaceXClient/v1/client /viewPic";
+	
+	/**
+	 * 预约产品列表获取
+	 */
+	public final static String PRODUCT_URL=BASE_URL+"/AnyChatFaceXClient/v1/client/getUserReservationInfos";
+	/**
+	 * 更新流水（流水与产品绑定）
+	 */
+	public final static String PRODUCT_TRADE_URL=BASE_URL+"/AnyChatFaceXClient/v1/client/trade/updateTradeInfo";
+	/**
+	 * 获取预约产品数
+	 */
+	public final static String PRODUCT_NUMBER=BASE_URL+"/AnyChatFaceXClient/v1/client/getUserReservationSum";
+	/**
+	 * 版本更新
+	 */
+	public final static String VERSION_UPDATA=BASE_URL+"/AnyChatFaceXClient/v1/client/goldAnn/validateAppVersion";
+	/**
+	 * 获取短信验证码
+	 * @param resultCb 结果回调
+	 */
+	@SuppressWarnings("rawtypes")
+	public static void requestSmsCode(String phoneNumber,ResultCallback resultCb) {
+		HttpUtil.get(SMS_URL + "?phonenumber=" + phoneNumber,resultCb);
+	}
+	
+	/**
+	 * 登录
+	 * @param params
+	 * @param resultCb 结果回调
+	 */
+	@SuppressWarnings("rawtypes")
+	public static void login(LoginModel loginModel,ResultCallback resultCb) {
+		ArrayList<ParamPair> params = new ArrayList<ParamPair>();
+		params.add(new ParamPair("logintype",String.valueOf(loginModel.logintype)));
+		params.add(new ParamPair("phonenumber",loginModel.phonenumber));
+		params.add(new ParamPair("smscode",loginModel.smscode));
+		HttpUtil.post(LOGIN_URL, resultCb, params);
+	}
+	
+	/**
+	 * 上传身份证与签名图
+	 */
+	@SuppressWarnings("rawtypes")
+	public static void uploadOCRInfos(OCRModel ocrModel,ResultCallback resultCb) {
+		ArrayList<ParamPair> params = new ArrayList<ParamPair>();
+		if(!TextUtils.isEmpty(ocrModel.tradeno)) {
+			params.add(new ParamPair("tradeno",ocrModel.tradeno));
+		}
+		if(ocrModel.type == 1 || ocrModel.type == 2) {
+			params.add(new ParamPair("type",String.valueOf(ocrModel.type)));
+		}
+		if(!TextUtils.isEmpty(ocrModel.cardsize)) {
+			params.add(new ParamPair("cardsize",ocrModel.cardsize));
+		}
+		HttpUtil.post(OCR_URL, resultCb, params);
+	}
+	
+	/**
+	 * 身份信息上传
+	 * @param idcardInfoModel
+	 * @param resultCb
+	 */
+	@SuppressWarnings("rawtypes")
+	public static void addIDCardInfos(IDCardInfoModel idcardInfoModel,ResultCallback resultCb) {
+		ArrayList<ParamPair> params = new ArrayList<ParamPair>();
+		params.add(new ParamPair("tradeno",idcardInfoModel.tradeno));
+		params.add(new ParamPair("username",idcardInfoModel.username));
+		params.add(new ParamPair("usersex",String.valueOf(idcardInfoModel.usersex)));
+		if(!TextUtils.isEmpty(idcardInfoModel.userphone)) {
+		params.add(new ParamPair("userphone",idcardInfoModel.userphone));
+		}
+		params.add(new ParamPair("useridcardu",idcardInfoModel.useridcardu));
+		params.add(new ParamPair("useridcardn",idcardInfoModel.useridcardn));
+		params.add(new ParamPair("idcardaddress",idcardInfoModel.idcardaddress));
+		if(!TextUtils.isEmpty(idcardInfoModel.idcardvaildtime)) {
+			params.add(new ParamPair("idcardvaildtime",idcardInfoModel.idcardvaildtime));
+		}
+		if(!TextUtils.isEmpty(idcardInfoModel.idcardinvaildtime)) {
+			params.add(new ParamPair("idcardinvaildtime",idcardInfoModel.idcardinvaildtime));
+		}
+		params.add(new ParamPair("idcardnum",idcardInfoModel.idcardnum));
+		params.add(new ParamPair("idcardbirth",idcardInfoModel.idcardbirth));
+		params.add(new ParamPair("idcardnation",idcardInfoModel.idcardnation));
+		if(!TextUtils.isEmpty(idcardInfoModel.idcardsignorganization)) {
+			params.add(new ParamPair("idcardsignorganization",idcardInfoModel.idcardsignorganization));
+		}
+		HttpUtil.post(ADD_IDCARD_INFO_URL,resultCb,params);
+	}
+	
+	/**
+	 * 创建流水号
+	 * @param tradeInfo
+	 * @param resultCb
+	 */
+	@SuppressWarnings("rawtypes")
+	public static void createTrade(TradeModel tradeModel,ResultCallback resultCb) {
+		ArrayList<ParamPair> params = new ArrayList<ParamPair>();
+		if(!TextUtils.isEmpty(tradeModel.customerId)) {
+			params.add(new ParamPair("customerId",tradeModel.customerId));
+		}
+		if(!TextUtils.isEmpty(tradeModel.customerName)) {
+			params.add(new ParamPair("customerName",tradeModel.customerName));
+		}
+		if(!TextUtils.isEmpty(tradeModel.password)) {
+			params.add(new ParamPair("password",tradeModel.password));
+		}
+		if(tradeModel.sex == 0 || tradeModel.sex == 1) {
+			params.add(new ParamPair("sex",String.valueOf(tradeModel.sex)));
+		}
+		if(!TextUtils.isEmpty(tradeModel.phone)) {
+			params.add(new ParamPair("phone",tradeModel.phone));
+		}
+		if(tradeModel.fxmodel != -1) {
+			params.add(new ParamPair("fxmodel",String.valueOf(tradeModel.fxmodel)));
+		}
+		if(!TextUtils.isEmpty(tradeModel.wandaPlaza)) {
+			params.add(new ParamPair("wandaPlaza",tradeModel.wandaPlaza));
+		}
+		if(!TextUtils.isEmpty(tradeModel.machNum)) {
+			params.add(new ParamPair("machNum",tradeModel.machNum));
+		}
+		if(!TextUtils.isEmpty(tradeModel.city)) {
+			params.add(new ParamPair("city",tradeModel.city));
+		}
+		if(tradeModel.secondCard == 0 || tradeModel.secondCard == 1) {
+			params.add(new ParamPair("secondCard",String.valueOf(tradeModel.secondCard)));
+		}
+		if(tradeModel.IDCheck == 0 || tradeModel.IDCheck == 1) {
+			params.add(new ParamPair("IDCheck",String.valueOf(tradeModel.IDCheck)));
+		}
+		if(!TextUtils.isEmpty(tradeModel.sendType)) {
+			params.add(new ParamPair("sendType",tradeModel.sendType));
+		}
+		if(!TextUtils.isEmpty(tradeModel.channelCode)) {
+			params.add(new ParamPair("channelCode",tradeModel.channelCode));
+		}
+		if(!TextUtils.isEmpty(tradeModel.IDCardNum)) {
+			params.add(new ParamPair("IDCardNum",tradeModel.IDCardNum));
+		}
+		if(!TextUtils.isEmpty(tradeModel.IDCardBirth)) {
+			params.add(new ParamPair("IDCardBirth",tradeModel.IDCardBirth));
+		}
+		if(!TextUtils.isEmpty(tradeModel.IDCardNation)) {
+			params.add(new ParamPair("IDCardNation",tradeModel.IDCardNation));
+		}
+		if(!TextUtils.isEmpty(tradeModel.IDCardInvaildTime)) {
+			params.add(new ParamPair("IDCardInvaildTime",tradeModel.IDCardInvaildTime));
+		}
+		if(!TextUtils.isEmpty(tradeModel.certificatePicPath)) {
+			params.add(new ParamPair("certificatePicPath",tradeModel.certificatePicPath));
+		}
+		if(!TextUtils.isEmpty(tradeModel.faceRecognitionPicPath)) {
+			params.add(new ParamPair("faceRecognitionPicPath",tradeModel.faceRecognitionPicPath));
+		}
+		if(!TextUtils.isEmpty(tradeModel.operationLogNo)) {
+			params.add(new ParamPair("operationLogNo",tradeModel.operationLogNo));
+		}
+		if(!TextUtils.isEmpty(tradeModel.faceRecognitionRecordId)) {
+			params.add(new ParamPair("faceRecognitionRecordId",tradeModel.faceRecognitionRecordId));
+		}
+		if(tradeModel.businessType!=-1) {
+			params.add(new ParamPair("businessType",String.valueOf(tradeModel.businessType)));
+		}
+		
+		HttpUtil.post(CREATE_TRADE_URL,resultCb,params);
+	}
+	
+	/**
+	 * 更新流水信息
+	 */
+	public static void updateTradeInfo(String tradeNo, String clientBusinessHallName,String clientBusinessHallNo,ResultCallback resultCb) {
+		ArrayList<ParamPair> params = new ArrayList<ParamPair>();
+		if(!TextUtils.isEmpty(tradeNo)) {
+			params.add(new ParamPair("tradeNo",tradeNo));
+		}
+		if(!TextUtils.isEmpty(clientBusinessHallName)) {
+			params.add(new ParamPair("tradeNo",clientBusinessHallName));
+		}
+		if(!TextUtils.isEmpty(clientBusinessHallNo)) {
+			params.add(new ParamPair("tradeNo",clientBusinessHallNo));
+		}
+		HttpUtil.post(UNDATETRADEINFO_URL,resultCb,params);
+	}
+	
+	/**
+	 * 流水添加身份证正反面
+	 * @param tradeIdCardModel
+	 * @param resultCb
+	 */
+	@SuppressWarnings("rawtypes")
+	public static void addTradeIDCardInfo(TradeIdCardModel tradeIdCardModel,ResultCallback resultCb) {
+		ArrayList<ParamPair> params = new ArrayList<ParamPair>();
+		if(!TextUtils.isEmpty(tradeIdCardModel.file)) {
+			params.add(new ParamPair("file",tradeIdCardModel.file));
+		}
+		if(!TextUtils.isEmpty(tradeIdCardModel.tradeno)) {
+			params.add(new ParamPair("tradeno",tradeIdCardModel.tradeno));
+		}
+		
+		if(tradeIdCardModel.type == 1 || tradeIdCardModel.type == 2) {
+			params.add(new ParamPair("type",String.valueOf(tradeIdCardModel.type)));
+		}
+		
+		if(!TextUtils.isEmpty(tradeIdCardModel.cardside)) {
+			params.add(new ParamPair("cardside",tradeIdCardModel.cardside));
+		}
+		HttpUtil.post(ADD_TRADE_IDCARD_URL, resultCb, params);
+	}
+/**
+ * 身份证图片预览
+ * @param path
+ * @param resultCb
+ */
+	public static void imageBrowse(String path,ResultCallback resultCb) {
+		HttpUtil.get(PHOTO_BROWS_URL + "?path=" + path,resultCb);
+	}
+	
+	/**
+	 * 获取预约产品列表
+	 * @param resultCb
+	 */
+	public static void getProductList(int customerId,ResultCallback resultCb){
+		ArrayList<ParamPair> params = new ArrayList<ParamPair>();
+		params.add(new ParamPair("customerId",String.valueOf(customerId)));
+		HttpUtil.post(PRODUCT_URL, resultCb,params);
+	}
+	/**
+	 * 更新流水号（将流水号与已预约产品绑定）
+	 * @param tradeNo 流水号
+	 * @param productModel
+	 * @param resultCallback
+	 */
+	public static void updataTrade(String tradeNo,ProductModel productModel,ResultCallback resultCallback){
+		ArrayList<ParamPair> params = new ArrayList<ParamPair>();
+		params.add(new ParamPair("tradeNo",tradeNo));
+		params.add(new ParamPair("businessID",String.valueOf(1)));
+		if(!TextUtils.isEmpty(productModel.reservationId)) {
+			params.add(new ParamPair("reservationId",productModel.reservationId));
+		}
+		if(!TextUtils.isEmpty(productModel.productId)) {
+			params.add(new ParamPair("productId",productModel.productId));
+		}
+		if(!TextUtils.isEmpty(productModel.productNumber)) {
+			params.add(new ParamPair("productNumber",productModel.productNumber));
+		}
+		if(!TextUtils.isEmpty(productModel.productName)) {
+			params.add(new ParamPair("productName",productModel.productName));
+		}
+		HttpUtil.post(PRODUCT_TRADE_URL, resultCallback,params);
+	}
+	/**
+	 * 获取预约产品数
+	 * @param customerId
+	 * @param resultCb
+	 */
+	public static void getProductNumber(int customerId,ResultCallback resultCb){
+		ArrayList<ParamPair> params = new ArrayList<ParamPair>();
+		params.add(new ParamPair("customerId",String.valueOf(customerId)));
+		HttpUtil.post(PRODUCT_NUMBER, resultCb,params);
+	}
+	public static void updataVersion(VersionModel versionModel,ResultCallback resultCb){
+		ArrayList<ParamPair> params = new ArrayList<ParamPair>();
+		if(!TextUtils.isEmpty(versionModel.terminalType)) {
+			params.add(new ParamPair("terminalType",versionModel.terminalType));
+		}
+		if(!TextUtils.isEmpty(versionModel.version)) {
+			params.add(new ParamPair("version",versionModel.version));
+		}
+		if(!TextUtils.isEmpty(versionModel.url)) {
+			params.add(new ParamPair("url",versionModel.url));
+		}
+		HttpUtil.post(VERSION_UPDATA, resultCb,params);
+	}
+}
