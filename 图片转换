@@ -1,0 +1,16 @@
+Byte[]转Bitmap
+    BitmapFactory.decodeByteArray(data, 0, data.length);
+
+Bitmap转Byte[]
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+    data2 = baos.toByteArray();
+
+Bitmap转Drawable
+    Bitmap bm=xxx; //xxx根据你的情况获取
+    BitmapDrawable bd=BitmapDrawable(bm);
+
+Drawable转Bitmap
+    Drawable d=xxx; //xxx根据自己的情况获取drawable
+    BitmapDrawable bd = (BitmapDrawable) d;
+    Bitmap bm = bd.getBitmap();
