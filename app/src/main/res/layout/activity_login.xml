@@ -23,12 +23,19 @@
                 android:src="@drawable/ic_user"
                 android:contentDescription="@null"/>
 
-        <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/login_account_edit"
-                style="@style/style_circle_edit"
-                android:hint="@string/login_username"
-                android:layout_marginStart="@dimen/dp_6"
-                android:layout_marginLeft="@dimen/dp_6"/>
+        <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                    android:id="@+id/login_account_edit"
+                    style="@style/style_circle_edit"
+                    android:hint="@string/login_username"
+                    android:maxLength="20"
+                    android:layout_marginStart="@dimen/dp_6"
+                    android:layout_marginLeft="@dimen/dp_6"/>
+        </android.support.design.widget.TextInputLayout>
+
 
     </LinearLayout>
 
@@ -59,13 +66,19 @@
                 android:src="@drawable/ic_password"
                 android:contentDescription="@null"/>
 
-        <android.support.v7.widget.AppCompatEditText
-                android:id="@+id/login_password_edit"
-                style="@style/style_circle_edit"
-                android:hint="@string/login_password"
-                android:inputType="textPassword"
-                android:layout_marginStart="@dimen/dp_6"
-                android:layout_marginLeft="@dimen/dp_6"/>
+        <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+                    android:id="@+id/login_password_edit"
+                    style="@style/style_circle_edit"
+                    android:hint="@string/login_password"
+                    android:inputType="textPassword"
+                    android:layout_marginStart="@dimen/dp_6"
+                    android:layout_marginLeft="@dimen/dp_6"/>
+        </android.support.design.widget.TextInputLayout>
+
     </LinearLayout>
 
     <View
@@ -96,6 +109,10 @@
 
     <android.support.v4.widget.ContentLoadingProgressBar
             android:id="@+id/progressBar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?android:attr/progressBarStyle"
+            android:visibility="gone"
+            android:layout_centerInParent="true"/>
+
 </RelativeLayout>

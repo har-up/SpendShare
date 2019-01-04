@@ -2,10 +2,8 @@ package com.spendshare.dao.spendshare.view.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.spendshare.dao.spendshare.MainActivity
 import com.spendshare.dao.spendshare.R
 import com.spendshare.dao.spendshare.model.Login
 import com.spendshare.dao.spendshare.presenter.LoginPresenter
@@ -48,6 +46,7 @@ class LoginActivity : AppCompatActivity(),LoginView{
     }
 
     override fun navigateToHome() {
-        startActivity(Intent(this,MainActivity::class.java))
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 }
