@@ -8,5 +8,9 @@
     <string name="task_special">专项任务</string>
     <string name="task_inspection">巡检作业</string>
     <string name="hint_search">请输入关键字</string>
+    <string name="list_box">光交箱列表</string>
+    <string name="info_base">基本信息</string>
+    <string name="time_dispatchtask">下达任务时间</string>
+    <string name="man_dispatchtask">下达任务人</string>
 
 </resources>

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import com.example.expandpoptab.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +98,7 @@ public class PopViewAdapter extends BaseAdapter {
             view.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
         }
         view.setPadding(pading, pading, 0, pading);
+
         view.setOnClickListener(new View.OnClickListener() {
 
             @Override

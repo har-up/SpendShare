@@ -5,11 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.os.Build;
-import android.support.v4.widget.PopupWindowCompat;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +14,6 @@ import android.widget.PopupWindow;
 import android.widget.PopupWindow.OnDismissListener;
 import android.widget.RelativeLayout;
 import android.widget.ToggleButton;
-import com.example.expandpoptab.R;
 
 import java.util.ArrayList;
 
@@ -170,9 +165,7 @@ public class ExpandPopTabView extends LinearLayout implements OnDismissListener 
         if (mPopupWindow.getContentView() != mViewLists.get(mSelectPosition)) {
             mPopupWindow.setContentView(mViewLists.get(mSelectPosition));
         }
-//        mPopupWindow.showAsDropDown(mSelectedToggleBtn, 0, 0);
-        PopupWindowCompat.setOverlapAnchor(mPopupWindow,false);
-        PopupWindowCompat.showAsDropDown(mPopupWindow,mSelectedToggleBtn,20,20,Gravity.CENTER);
+        mPopupWindow.showAsDropDown(this, 0, 0);
     }
 
     @Override

@@ -16,13 +16,27 @@
                             <entry key="actionbar">
                               <value>
                                 <PersistentState>
+                                  <option name="children">
+                                    <map>
+                                      <entry key="clipartAsset">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="url" value="jar:file:/D:/IntelliJ%20IDEA%202018.2.6/plugins/android/lib/android.jar!/images/material_design_icons/content/ic_add_circle_black_24dp.xml" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="C:\Users\Administrator\Desktop\icons\password.png" />
-                                      <entry key="outputName" value="ic_password" />
-                                      <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="010506" />
+                                      <entry key="imageAsset" value="C:\Users\Administrator\Desktop\icons\take-photo.png" />
+                                      <entry key="outputName" value="ic_takephoto" />
+                                      <entry key="themeColor" value="020406" />
                                     </map>
                                   </option>
                                 </PersistentState>

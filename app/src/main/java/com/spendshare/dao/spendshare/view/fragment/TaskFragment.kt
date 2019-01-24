@@ -41,7 +41,7 @@ class TaskFragment : Fragment() {
         recycleView?.layoutManager = LinearLayoutManager(context)
         var tasksAdapter = TasksAdapter(getTaskDatas())
         tasksAdapter.setOnItemClickListener { view, position, id ->
-            Toast.makeText(context, getTaskDatas().get(position).taskName, Toast.LENGTH_SHORT).show()
+            activity.supportFragmentManager.beginTransaction().replace(R.id.contentContainer,TaskDetailFragment()).commit()
         }
         recycleView?.adapter = tasksAdapter
         recycleView?.addItemDecoration(RecyclerViewDivider(context, LinearLayoutManager.VERTICAL, 5, Color.GRAY))

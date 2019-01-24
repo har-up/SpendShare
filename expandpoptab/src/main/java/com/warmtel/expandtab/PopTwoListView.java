@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import com.example.expandpoptab.R;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -20,6 +20,7 @@ class LoginActivity : AppCompatActivity(),LoginView{
         init()
     }
 
+
     private fun init() {
         login_btn.setOnClickListener{
             presenter.login(login_account_edit.text.toString(),login_password_edit.text.toString())
