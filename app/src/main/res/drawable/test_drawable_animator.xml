@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/state_pressed" android:state_pressed="true" android:drawable="@color/red"/>
+
+    <item android:id="@+id/state_focused" android:state_focused="true" android:drawable="@color/black"/>
+
+    <item android:id="@+id/defalut" android:drawable="@color/blue" />
+
+    <transition
+            android:fromId="@id/state_pressed"
+            android:toId="@id/state_focused">
+        <animation-list>
+            <item android:duration="10000" android:drawable="@color/colorPrimary"/>
+            <item android:duration="10000" android:drawable="@color/colorPrimaryDark"/>
+        </animation-list>
+    </transition>
+</animated-selector>

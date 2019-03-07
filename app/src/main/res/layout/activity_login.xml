@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/login_group"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:orientation="vertical">
+
+    <com.drong.DropMenuView
+            android:id="@+id/drop"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_100">
+
+    </com.drong.DropMenuView>
 
     <LinearLayout
             android:id="@+id/login_account_group"
@@ -102,9 +110,11 @@
         <android.support.v7.widget.AppCompatButton
                 android:id="@+id/login_btn"
                 style="@style/style_circle_btn"
-                android:background="@color/blue"
+                android:background="@drawable/test_drawable_animator"
                 android:layout_marginTop="@dimen/dp_32"
                 android:text="@string/login_in"/>
+
+
     </LinearLayout>
 
     <android.support.v4.widget.ContentLoadingProgressBar
@@ -114,5 +124,14 @@
             style="?android:attr/progressBarStyle"
             android:visibility="gone"
             android:layout_centerInParent="true"/>
+
+    <com.spendshare.dao.spendshare.view.TabBar
+            android:id="@+id/tabbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/nav_menu">
+
+    </com.spendshare.dao.spendshare.view.TabBar>
 
 </RelativeLayout>

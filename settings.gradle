@@ -1,1 +1,1 @@
-include ':app', ':expandpoptab'
+include ':app', ':expandpoptab', ':common', ':dropmenu'

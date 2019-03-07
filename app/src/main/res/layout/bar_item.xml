@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RadioGroup
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <android.support.v7.widget.AppCompatRadioButton
+                android:text="@string/app_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_user"
+                android:button="@null"
+                android:background="@color/blue"/>
+        <android.support.v7.widget.AppCompatRadioButton
+                android:text="@string/app_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/ic_user"
+                android:layout_weight="1"
+                android:button="@null"
+                android:background="@color/blue"/>
+        <android.support.v7.widget.AppCompatRadioButton
+                android:text="@string/app_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/ic_user"
+                android:layout_weight="1"
+                android:button="@null"
+                android:background="@color/blue"/>
+        <android.support.v7.widget.AppCompatRadioButton
+                android:text="@string/app_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/ic_user"
+                android:layout_weight="1"
+                android:button="@null"
+                android:background="@color/blue"/>
+</RadioGroup>
