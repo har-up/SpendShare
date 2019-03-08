@@ -42,7 +42,9 @@ class LoginActivity : AppCompatActivity(),LoginView{
         var holder = ObjectAnimator.ofPropertyValuesHolder(relativeLayout, scaleX, scaleY)
 
         var dropMenuView = findViewById<DropMenuView>(R.id.drop)
-        dropMenuView.addMenu("区域",arrayOf("aa","bb").toList())
+        dropMenuView.addMenu("区域",arrayOf("aa","bb","cc").toList())
+        dropMenuView.addMenu("价格",arrayOf("bb","cc","dd").toList())
+        dropMenuView.addMenu("价格",arrayOf("cc","ee","ff").toList())
         layoutTransition.setAnimator(LayoutTransition.APPEARING, holder)
         relativeLayout.layoutTransition = layoutTransition
         var flag = false
